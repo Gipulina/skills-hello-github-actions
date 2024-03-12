@@ -1,4 +1,4 @@
-name: Build y Desplegar
+name: Crear y usar artefacto
 
 on:
   push:
@@ -13,19 +13,19 @@ jobs:
     - name: Checkout del código fuente
       uses: actions/checkout@v2
 
-    - name: Instalar dependencias
-      run: npm install
+    - name: Crear carpeta de salida
+      run: mkdir dist
 
-    - name: Construir la aplicación
-      run: npm run build
+    - name: Crear un archivo en la carpeta de salida
+      run: echo "Contenido del archivo" > dist/ejemplo.txt
 
     - name: Guardar artefacto
       uses: actions/upload-artifact@v2
       with:
-        name: my-app-artifact
+        name: my-artifact
         path: dist
 
-  deploy:
+  use-artifact:
     needs: build
     runs-on: ubuntu-latest
 
@@ -33,11 +33,9 @@ jobs:
     - name: Descargar artefacto
       uses: actions/download-artifact@v2
       with:
-        name: my-app-artifact
-        path: dist
+        name: my-artifact
+        path: downloaded-artifact
 
-    - name: Desplegar en el servidor
-      run: |
-        # Lógica para desplegar en el servidor
-        echo "Desplegando la aplicación en el servidor"
+    - name: Mostrar contenido del artefacto descargado
+      run: cat downloaded-artifact/ejemplo.txt
 
