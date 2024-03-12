@@ -1,0 +1,43 @@
+name: Build y Desplegar
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout del código fuente
+      uses: actions/checkout@v2
+
+    - name: Instalar dependencias
+      run: npm install
+
+    - name: Construir la aplicación
+      run: npm run build
+
+    - name: Guardar artefacto
+      uses: actions/upload-artifact@v2
+      with:
+        name: my-app-artifact
+        path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Descargar artefacto
+      uses: actions/download-artifact@v2
+      with:
+        name: my-app-artifact
+        path: dist
+
+    - name: Desplegar en el servidor
+      run: |
+        # Lógica para desplegar en el servidor
+        echo "Desplegando la aplicación en el servidor"
+
